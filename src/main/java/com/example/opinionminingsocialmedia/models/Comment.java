@@ -9,60 +9,66 @@ import java.sql.Date;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer commentId;
-    @Column(name = "comment_score")
-    private Integer commentScore;
-    @Column(name = "comment_date")
-    private Date commentDate;
-    @Column(name = "comment_data")
-    private String commentData;
+    private Integer id;
+    @Column(name = "score")
+    private Integer score;
+    @Column(name = "date")
+    private Date date;
+    @Column(name = "data")
+    private String data;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id")
     private Post post;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "topic_id")
     private Topic topic;
 
+    public Comment() {
+        super();
+    }
     public Comment(Integer commentId, Integer commentScore, Date commentDate, String commentData, Post post, User user, Topic topic) {
-        this.commentId = commentId;
-        this.commentScore = commentScore;
-        this.commentDate = commentDate;
-        this.commentData = commentData;
+        this.id = commentId;
+        this.score = commentScore;
+        this.date = commentDate;
+        this.data = commentData;
         this.post = post;
         this.user = user;
         this.topic = topic;
     }
 
-    public Integer getCommentId() {
-        return commentId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setCommentId(Integer commentId) {
-        this.commentId = commentId;
+    public void setId(Integer commentId) {
+        this.id = commentId;
     }
 
-    public Integer getCommentScore() {
-        return commentScore;
+    public Integer getScore() {
+        return score;
     }
 
-    public void setCommentScore(Integer commentScore) {
-        this.commentScore = commentScore;
+    public void setScore(Integer commentScore) {
+        this.score = commentScore;
     }
 
-    public Date getCommentDate() {
-        return commentDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setCommentDate(Date commentDate) {
-        this.commentDate = commentDate;
+    public void setDate(Date commentDate) {
+        this.date = commentDate;
     }
 
-    public String getCommentData() {
-        return commentData;
+    public String getData() {
+        return data;
     }
 
-    public void setCommentData(String commentData) {
-        this.commentData = commentData;
+    public void setData(String commentData) {
+        this.data = commentData;
     }
 
     public Post getPost() {
