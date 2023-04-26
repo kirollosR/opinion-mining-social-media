@@ -18,8 +18,8 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
-    private Integer postId;
+    @Column(name = "id")
+    private Integer id;
     @Column(name = "content", nullable = false)
     private String content;
     @Lob
@@ -27,8 +27,10 @@ public class Post {
     @Column(name = "image", nullable = false)
     private MultipartFile image;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "topic_id")
     private Topic topic;
     @Column(name = "post_score")
     private Float postScore;
