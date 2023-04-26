@@ -1,128 +1,108 @@
 package com.example.opinionminingsocialmedia.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
-public class User {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
-    @Column(name = "firstname")
-    private String firstname;
-    @Column(name = "lastname")
-    private String lastname;
-    @Column(name = "email")
-    private String email;
+    @NonNull
     @Column(name = "username")
     private String username;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name = "user_email")
+    private String email;
+    @JsonIgnore
     @Column(name = "password")
     private String password;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "gender_id")
-    private Gender gender;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id")
-    private Role role;
-    @Column(name = "profile_url")
-    private String profileUrl;
-    @Column(name = "status")
-    private String status;
 
-    public User() {
-        super();
-    }
-    public User(Integer userId, String userFirstname, String userLastname, String userEmail, String username, String password, Gender gender, Role role, String userProfile, String userStatus) {
-        this.id = userId;
-        this.firstname = userFirstname;
-        this.lastname = userLastname;
-        this.email = userEmail;
-        this.username = username;
-        this.password = password;
-        this.gender = gender;
-        this.role = role;
-        this.profileUrl = userProfile;
-        this.status = userStatus;
+    private boolean active;
+    //    @ManyToOne(cascade = CascadeType.ALL)
+//    private Gender gender;
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role;
+//    @Column(name = "user_profile")
+//    private String userProfile;
+//    @Column(name = "user_status")
+//    private String userStatus;
+
+    private List<GrantedAuthority> authorities;
+
+    public User(User user) {
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.active = user.isActive();
+        this.authorities = Arrays.stream(user.getRole().name().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
-    public Integer getId() {
-        return id;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String userFirstname) {
-        this.firstname = userFirstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String userLastname) {
-        this.lastname = userLastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String userEmail) {
-        this.email = userEmail;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
+    @JsonIgnore
+    @Override
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public Gender getGender() {
-        return gender;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public Role getRole() {
-        return role;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    @Override
+    public boolean isEnabled() {
+        return active;
     }
 
-    public String getProfileUrl() {
-        return profileUrl;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
-    public void setProfileUrl(String userProfile) {
-        this.profileUrl = userProfile;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String userStatus) {
-        this.status = userStatus;
+    public boolean isActive() {
+        return active;
     }
 }
