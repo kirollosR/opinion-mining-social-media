@@ -9,8 +9,8 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "topic_id")
     private Integer topicId;
-    @Column(name = "topic_name")
-    private String topicName;
+    @Column(name = "name")
+    private String name;
     @ManyToOne(cascade = CascadeType.ALL)
     private User user;
 }
