@@ -1,4 +1,4 @@
-package com.example.opinionminingsocialmedia.controllers;
+package com.example.opinionminingsocialmedia.errors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseBody;

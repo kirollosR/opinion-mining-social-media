@@ -1,8 +1,7 @@
 package com.example.opinionminingsocialmedia.models;
 
 import jakarta.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 
 
 @Entity
@@ -13,12 +12,14 @@ public class Keyword {
     @Column(name = "id")
     private Integer id;
     @Column(name = "name")
-    @NotEmpty(message = "Please enter a keyword")
+    @NotBlank(message = "Please enter a keyword")
     private String name;
     @Column(name = "score")
-    @NotEmpty(message = "Please enter a score")
+    @NotNull(message = "Please enter a score")
+    @Min(value = 2, message = "Score must be greater than 2")
     @Max(value = 10, message = "Score must be less than 10")
     private Integer score;
+    @NotNull(message = "Please enter a user id")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

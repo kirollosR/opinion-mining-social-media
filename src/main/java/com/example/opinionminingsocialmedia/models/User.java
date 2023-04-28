@@ -1,5 +1,6 @@
 package com.example.opinionminingsocialmedia.models;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "users")
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)

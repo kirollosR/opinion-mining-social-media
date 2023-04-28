@@ -1,5 +1,8 @@
-package com.example.opinionminingsocialmedia.models;
+package com.example.opinionminingsocialmedia.Dtos;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(force = true)
 public class UserRequest {
     private String username;
     private String password;

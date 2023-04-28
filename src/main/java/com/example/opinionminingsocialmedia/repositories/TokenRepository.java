@@ -1,4 +1,4 @@
-package com.example.opinionminingsocialmedia.repository;
+package com.example.opinionminingsocialmedia.repositories;
 
 import com.example.opinionminingsocialmedia.models.Token;
 import org.springframework.data.jpa.repository.JpaRepository;

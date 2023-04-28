@@ -1,4 +1,4 @@
-package com.example.opinionminingsocialmedia.api;
+package com.example.opinionminingsocialmedia.controllers;
 
 
 import com.example.opinionminingsocialmedia.models.Post;

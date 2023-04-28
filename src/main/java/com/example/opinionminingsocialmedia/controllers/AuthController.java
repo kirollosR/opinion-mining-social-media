@@ -1,11 +1,9 @@
-package com.example.opinionminingsocialmedia.api;
+package com.example.opinionminingsocialmedia.controllers;
 
 import com.example.opinionminingsocialmedia.core.security.JWTResponse;
-import com.example.opinionminingsocialmedia.core.security.TokenUtil;
-import com.example.opinionminingsocialmedia.models.RegisterRequest;
-import com.example.opinionminingsocialmedia.models.Role;
+import com.example.opinionminingsocialmedia.Dtos.RegisterRequest;
 import com.example.opinionminingsocialmedia.models.User;
-import com.example.opinionminingsocialmedia.models.UserRequest;
+import com.example.opinionminingsocialmedia.Dtos.UserRequest;
 import com.example.opinionminingsocialmedia.services.AuthServices;
 import com.example.opinionminingsocialmedia.services.UserServices;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,20 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController()
 @RequestMapping(value = "api/v1/auth")

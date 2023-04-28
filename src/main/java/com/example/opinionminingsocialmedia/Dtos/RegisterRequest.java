@@ -1,4 +1,4 @@
-package com.example.opinionminingsocialmedia.models;
+package com.example.opinionminingsocialmedia.Dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

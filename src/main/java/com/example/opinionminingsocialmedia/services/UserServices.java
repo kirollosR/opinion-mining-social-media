@@ -1,7 +1,7 @@
 package com.example.opinionminingsocialmedia.services;
 
 import com.example.opinionminingsocialmedia.models.User;
-import com.example.opinionminingsocialmedia.repository.UserRepository;
+import com.example.opinionminingsocialmedia.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,5 +45,10 @@ public class UserServices implements UserDetailsService {
     public Optional<User> findByUserName(String userName) {
 
         return repository.findByUsername(userName);
+    }
+
+    public boolean isUserIdValid(Integer userId) {
+        User user = repository.findById(userId).orElse(null);
+        return user != null;
     }
 }

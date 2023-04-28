@@ -1,14 +1,12 @@
 package com.example.opinionminingsocialmedia.services;
 
 import com.example.opinionminingsocialmedia.models.Post;
-import com.example.opinionminingsocialmedia.repository.PostsRepository;
+import com.example.opinionminingsocialmedia.repositories.PostsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PostsServices {

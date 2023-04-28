@@ -1,10 +1,11 @@
 package com.example.opinionminingsocialmedia.services;
 
-import com.example.opinionminingsocialmedia.api.AuthController;
+import com.example.opinionminingsocialmedia.Dtos.RegisterRequest;
+import com.example.opinionminingsocialmedia.Dtos.UserRequest;
 import com.example.opinionminingsocialmedia.core.security.JWTResponse;
 import com.example.opinionminingsocialmedia.core.security.TokenUtil;
 import com.example.opinionminingsocialmedia.models.*;
-import com.example.opinionminingsocialmedia.repository.TokenRepository;
+import com.example.opinionminingsocialmedia.repositories.TokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

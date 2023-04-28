@@ -11,7 +11,7 @@ public class Topic {
     private Integer id;
     @Column(name = "name")
     private String name;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     private User user;
 
