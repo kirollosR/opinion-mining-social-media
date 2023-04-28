@@ -10,4 +10,7 @@ public class OpinionMiningSocialMediaApplication {
         SpringApplication.run(OpinionMiningSocialMediaApplication.class, args);
     }
 
+    private void run() {
+
+    }
 }

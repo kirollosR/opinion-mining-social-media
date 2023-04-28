@@ -1,9 +1,15 @@
 package com.example.opinionminingsocialmedia.services;
 
-import com.example.opinionminingsocialmedia.api.AuthController;
-import com.example.opinionminingsocialmedia.core.security.JWTResponse;
+import com.example.opinionminingsocialmedia.base.enums.GenderEnum;
+import com.example.opinionminingsocialmedia.base.enums.RoleEnum;
+import com.example.opinionminingsocialmedia.base.enums.TokenType;
+import com.example.opinionminingsocialmedia.payload.responses.JWTResponse;
 import com.example.opinionminingsocialmedia.core.security.TokenUtil;
 import com.example.opinionminingsocialmedia.models.*;
+import com.example.opinionminingsocialmedia.payload.requests.RegisterRequest;
+import com.example.opinionminingsocialmedia.payload.requests.UserRequest;
+import com.example.opinionminingsocialmedia.repository.GenderRepository;
+import com.example.opinionminingsocialmedia.repository.RoleRepository;
 import com.example.opinionminingsocialmedia.repository.TokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +42,11 @@ public class AuthServices {
     @Autowired
     private TokenRepository tokenRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private GenderRepository genderRepository;
+
     Logger log = LoggerFactory.getLogger(AuthServices.class);
 
     public JWTResponse login(UserRequest request) {
@@ -66,19 +77,33 @@ public class AuthServices {
                 .token(jwtToken)
                 .refreshToken(refreshToken)
                 .username(user.getUsername())
-                .roles(user.getRole().name())
+                .roles(user.getRole().getName())
                 .message("Login Success")
                 .success(true)
                 .build();
     }
 
-    public JWTResponse register(RegisterRequest request) {
+    public JWTResponse register(RegisterRequest request, RoleEnum roleEnum) {
+        if (userServices.existsByUsername(request.getUsername())) {
+            return JWTResponse.builder()
+                            .message("Error: Username is already taken!")
+                            .build();
+        }
+        var role = roleRepository.findByName(roleEnum.name());
+        if(role.isEmpty()) return JWTResponse.builder()
+                .message("Error: The Selected role is not found")
+                .build();
+        var gender = genderRepository.findById(request.getGender());
+        if(gender.isEmpty()) return JWTResponse.builder()
+                .message("Error: The Selected Gender is not found")
+                .build();
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(RoleEnum.USER )
+                .role(role.get())
+                .gender(gender.get())
                 .username(request.getUsername())
                 .active(true)
                 .build();
@@ -90,7 +115,7 @@ public class AuthServices {
                 .token(jwtToken)
                 .refreshToken(refreshToken)
                 .username(user.getUsername())
-                .roles(user.getRole().name())
+                .roles(user.getRole().getName())
                 .message("Register Success")
                 .success(true)
                 .build();
@@ -119,7 +144,7 @@ public class AuthServices {
                         .token(accessToken)
                         .refreshToken(refreshToken)
                         .username(user.getUsername())
-                        .roles(user.getRole().name())
+                        .roles(user.getRole().getName())
                         .message("Register Success")
                         .success(true)
                         .build();
@@ -127,6 +152,23 @@ public class AuthServices {
             }
         }
     }
+
+    public void saveAdmin(RegisterRequest request) {
+        var role = roleRepository.findByName(RoleEnum.ADMIN.name());
+        var gender = genderRepository.findById(request.getGender());
+        var user = User.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(role.get())
+                .gender(gender.get())
+                .username(request.getUsername())
+                .active(true)
+                .build();
+        userServices.addUser(user);
+    }
+
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)

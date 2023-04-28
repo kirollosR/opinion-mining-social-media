@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class TokenUtil {
     private long TOKEN_VALIDITY = 604800L; // 7 Days
-    private long EXP_TOKEN_VALIDITY = 1004800L; // 7 Days
+    private long EXP_TOKEN_VALIDITY = 1004800L; // 14 Days
     private String TOKEN_SECRET = "214125442A472D4B6150645367566B59703373357638792F423F4528482B4D6251655468576D5A7134743777217A24432646294A404E635266556A586E327235";
 
     public String generateToken(UserDetails userDetails) {
@@ -31,12 +31,8 @@ public class TokenUtil {
 
 
     public String generateRefreshToken(UserDetails userDetails) {
-        HashMap<String, Object> calims = new HashMap<String, Object>();
-//        clims.put("jti", id);
-//        clims.put("sub", userDetails.getUsername());
-//        clims.put("created", new Date());
-
-        return buildToken(calims, userDetails, EXP_TOKEN_VALIDITY * 1000); // 7 days
+        HashMap<String, Object> claims = new HashMap<String, Object>();
+        return buildToken(claims, userDetails, EXP_TOKEN_VALIDITY * 1000); // 7 days
     }
 
     private String buildToken(

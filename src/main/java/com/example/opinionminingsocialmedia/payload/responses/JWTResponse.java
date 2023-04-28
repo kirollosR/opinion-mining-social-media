@@ -1,4 +1,4 @@
-package com.example.opinionminingsocialmedia.core.security;
+package com.example.opinionminingsocialmedia.payload.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
