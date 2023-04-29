@@ -50,4 +50,19 @@ public class UserServices implements UserDetailsService {
     public Boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
     }
+
+    public boolean isUserIdValid(Integer userId) {
+        User user = repository.findById(userId).orElse(null);
+        return user != null;
+    }
+
+    public Boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
+
+    public Optional<User> findById(Integer id) {
+
+        return repository.findById(id);
+    }
 }
