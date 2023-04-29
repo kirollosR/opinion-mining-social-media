@@ -1,6 +1,5 @@
 package com.example.opinionminingsocialmedia.services;
 
-import com.example.opinionminingsocialmedia.base.enums.GenderEnum;
 import com.example.opinionminingsocialmedia.base.enums.RoleEnum;
 import com.example.opinionminingsocialmedia.base.enums.TokenType;
 import com.example.opinionminingsocialmedia.payload.responses.JWTResponse;
@@ -87,6 +86,11 @@ public class AuthServices {
         if (userServices.existsByUsername(request.getUsername())) {
             return JWTResponse.builder()
                             .message("Error: Username is already taken!")
+                            .build();
+        }
+        if (userServices.existsByEmail(request.getEmail())) {
+            return JWTResponse.builder()
+                            .message("Error: Email is already in use!")
                             .build();
         }
         var role = roleRepository.findByName(roleEnum.name());
