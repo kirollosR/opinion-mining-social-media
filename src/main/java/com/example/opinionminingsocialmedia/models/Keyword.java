@@ -1,8 +1,8 @@
 package com.example.opinionminingsocialmedia.models;
 
 import jakarta.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotEmpty;
 
 
 @Entity

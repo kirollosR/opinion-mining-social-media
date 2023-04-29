@@ -1,5 +1,6 @@
 package com.example.opinionminingsocialmedia.models;
 
+import com.example.opinionminingsocialmedia.base.enums.TokenType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
