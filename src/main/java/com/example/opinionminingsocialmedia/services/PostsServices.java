@@ -1,7 +1,7 @@
 package com.example.opinionminingsocialmedia.services;
 
 import com.example.opinionminingsocialmedia.models.Post;
-import com.example.opinionminingsocialmedia.repositories.PostsRepository;
+import com.example.opinionminingsocialmedia.repository.PostsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -3,11 +3,8 @@ package com.example.opinionminingsocialmedia.services;
 import com.example.opinionminingsocialmedia.core.security.Response;
 import com.example.opinionminingsocialmedia.errors.RecordNotFoundException;
 import com.example.opinionminingsocialmedia.models.Keyword;
-import com.example.opinionminingsocialmedia.models.User;
-import com.example.opinionminingsocialmedia.repositories.KeywordRepository;
+import com.example.opinionminingsocialmedia.repository.KeywordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

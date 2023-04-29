@@ -1,9 +1,11 @@
 package com.example.opinionminingsocialmedia.models;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 
 @Entity
 @Table(name = "topics")
+@Builder
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

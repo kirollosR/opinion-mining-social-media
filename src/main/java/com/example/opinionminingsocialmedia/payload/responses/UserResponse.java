@@ -1,4 +1,4 @@
-package com.example.opinionminingsocialmedia.Dtos;
+package com.example.opinionminingsocialmedia.payload.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserResponse {
 //    private Integer id;
     private String username;
     private String email;

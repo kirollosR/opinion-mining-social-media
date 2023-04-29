@@ -1,11 +1,9 @@
 package com.example.opinionminingsocialmedia.controllers;
 
 import com.example.opinionminingsocialmedia.core.security.Response;
-import com.example.opinionminingsocialmedia.models.Post;
-import com.example.opinionminingsocialmedia.models.Topic;
+import com.example.opinionminingsocialmedia.payload.requests.TopicRequest;
 import com.example.opinionminingsocialmedia.services.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,7 +16,7 @@ public class TopicController {
     private TopicService topicService;
 
     @PostMapping("/addTopic")
-    public ResponseEntity<Response> addTopic(@RequestBody Topic topic){
+    public ResponseEntity<Response> addTopic(@RequestBody TopicRequest topic){
         Response response = topicService.addTopic(topic);
         if(response.isSuccess()){
             return new ResponseEntity(response, HttpStatus.OK);

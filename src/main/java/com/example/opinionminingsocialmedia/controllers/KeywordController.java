@@ -3,7 +3,7 @@ package com.example.opinionminingsocialmedia.controllers;
 import com.example.opinionminingsocialmedia.core.security.Response;
 import com.example.opinionminingsocialmedia.models.Keyword;
 import com.example.opinionminingsocialmedia.services.KeywordService;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import com.example.opinionminingsocialmedia.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;

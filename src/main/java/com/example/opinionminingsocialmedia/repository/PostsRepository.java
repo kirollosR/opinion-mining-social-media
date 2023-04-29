@@ -1,4 +1,4 @@
-package com.example.opinionminingsocialmedia.repositories;
+package com.example.opinionminingsocialmedia.repository;
 
 import com.example.opinionminingsocialmedia.models.Post;
 import org.springframework.data.domain.Page;

@@ -2,16 +2,16 @@ package com.example.opinionminingsocialmedia.services;
 
 import com.example.opinionminingsocialmedia.core.security.Response;
 import com.example.opinionminingsocialmedia.models.Topic;
-import com.example.opinionminingsocialmedia.Dtos.TopicDto;
+import com.example.opinionminingsocialmedia.payload.requests.TopicRequest;
 import com.example.opinionminingsocialmedia.models.User;
-import com.example.opinionminingsocialmedia.Dtos.UserDto;
-import com.example.opinionminingsocialmedia.repositories.TopicRepository;
+import com.example.opinionminingsocialmedia.payload.responses.TopicResponse;
+import com.example.opinionminingsocialmedia.payload.responses.UserResponse;
+import com.example.opinionminingsocialmedia.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TopicService {
@@ -20,10 +20,14 @@ public class TopicService {
     @Autowired
     private UserServices userServices;
 
-    public Response addTopic(TopicDto topic) {
-        Integer userId = topic.getUserID();
-        Optional<User> user = userServices.getUserById(userId);
-        if (userServices.isUserIdValid(userId)) {
+    public Response addTopic(TopicRequest topicRequest) {
+        Integer userId = topicRequest.getUserID();
+        var user = userServices.findById(userId);
+        if (user.isPresent()) {
+            Topic topic = Topic.builder()
+                    .name(topicRequest.getName())
+                    .user(user.get())
+                    .build();
             return Response.builder()
                     .message("Topic added successfully")
                     .data(topicRepository.save(topic))
@@ -39,23 +43,23 @@ public class TopicService {
     }
 
     public Response getAllTopics (){
-        List<TopicDto> topicDtoList = new ArrayList<>();
+        List<TopicResponse> topicDtoList = new ArrayList<>();
         List<Topic> topicList = topicRepository.findAll();
         for (Topic topic : topicList) {
             User user = topic.getUser();
-            UserDto userDto = UserDto.builder()
+            UserResponse userDto = UserResponse.builder()
                     .username(user.getUsername())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
                     .email(user.getEmail())
-                    .role(user.getRole().name())
+                    .role(user.getRole().getName())
                     .build();
-            TopicDto topicDto = TopicDto.builder()
+            TopicResponse topicResponse = TopicResponse.builder()
                     .id(topic.getId())
                     .name(topic.getName())
                     .user(userDto)
                     .build();
-            topicDtoList.add(topicDto);
+            topicDtoList.add(topicResponse);
         }
         if(topicDtoList.isEmpty()){
             return Response.builder()

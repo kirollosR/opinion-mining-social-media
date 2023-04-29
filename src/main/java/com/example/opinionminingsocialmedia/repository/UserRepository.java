@@ -1,4 +1,4 @@
-package com.example.opinionminingsocialmedia.repositories;
+package com.example.opinionminingsocialmedia.repository;
 
 import com.example.opinionminingsocialmedia.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,4 +9,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String userName);
+
+    Boolean existsByUsername(String username);
+    Boolean existsByEmail(String email);
 }

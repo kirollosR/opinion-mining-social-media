@@ -1,79 +1,63 @@
 package com.example.opinionminingsocialmedia.controllers;
 
-import com.example.opinionminingsocialmedia.core.security.JWTResponse;
-import com.example.opinionminingsocialmedia.Dtos.RegisterRequest;
+import com.example.opinionminingsocialmedia.base.enums.RoleEnum;
 import com.example.opinionminingsocialmedia.models.User;
-import com.example.opinionminingsocialmedia.Dtos.UserRequest;
+import com.example.opinionminingsocialmedia.payload.requests.RegisterRequest;
+import com.example.opinionminingsocialmedia.payload.requests.UserRequest;
+import com.example.opinionminingsocialmedia.payload.responses.JWTResponse;
 import com.example.opinionminingsocialmedia.services.AuthServices;
 import com.example.opinionminingsocialmedia.services.UserServices;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController()
 @RequestMapping(value = "api/v1/auth")
 public class AuthController {
     Logger log = LoggerFactory.getLogger(AuthController.class);
-//    @Autowired
-//    private TokenUtil tokenUtil;
-//
     @Autowired
     private UserServices userServices;
-//
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-@Autowired
-private AuthServices authServices;
-
-//    @PostMapping(value = {"", "/login"})
-//    public ResponseEntity<JWTResponse> login(@RequestBody UserRequest userRequest) throws Exception {
-//        log.info("Auth login init username: " + userRequest.getUsername() + " password: " + userRequest.getPassword());
-//        Authentication authentication = null;
-//        try {
-//            authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword()));
-//
-//        } catch (DisabledException e) {
-//            return new ResponseEntity(new JWTResponse(null, null, null, "USER_DISABLED"), HttpStatus.UNAUTHORIZED);
-//        } catch (BadCredentialsException e) {
-//            return new ResponseEntity(new JWTResponse(null, null, null, "INVALID_CREDENTIALS"), HttpStatus.BAD_REQUEST);
-//        } catch (Exception e) {
-//             log.info("AuthError " + e.toString());
-//            return new ResponseEntity(new JWTResponse(null, null, null, "Unknown_Error"), HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//        log.info("Auth is " + authentication.isAuthenticated());
-//        if (authentication.isAuthenticated()) {
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//            UserDetails userDetails = userServices.loadUserByUsername(userRequest.getUsername());
-//            Optional<User> user = userServices.findByUserName(userRequest.getUsername());
-//
-//            String token = tokenUtil.generateToken(user.get().getId(), userDetails);
-//
-//            return ResponseEntity.ok(new JWTResponse(token, userDetails.getUsername(), user.get().getRole().name(), "SUCCESS"));
-//        }
-//        return new ResponseEntity(new JWTResponse(null, null, null, "INVALID"), HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @Autowired
+    private AuthServices authServices;
 
     @PostMapping(value = {"", "/login"})
-    public ResponseEntity<JWTResponse> login(@RequestBody UserRequest userRequest) throws Exception {
+    public ResponseEntity<JWTResponse> login(@Valid @RequestBody UserRequest userRequest) throws Exception {
         log.info("Auth login init username: " + userRequest.getUsername() + " password: " + userRequest.getPassword());
-        return ResponseEntity.ok(authServices.login(userRequest));
+        JWTResponse response = authServices.login(userRequest);
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        }
+        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(value = {"", "/register"})
-    public ResponseEntity<JWTResponse> register(@RequestBody RegisterRequest request) throws Exception {
+    public ResponseEntity<JWTResponse> register(@Valid @RequestBody RegisterRequest request) throws Exception {
         log.info("User info is " + request.getUsername() + " " + request.getPassword());
-        final JWTResponse response = authServices.register(request);
-        if(response.isSuccess()) {
+        final JWTResponse response = authServices.register(request, RoleEnum.USER);
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        }
+        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = {"", "admin/register"})
+    public ResponseEntity<JWTResponse> adminRegister(@Valid @RequestBody RegisterRequest request) throws Exception {
+        log.info("User info is " + request.getUsername() + " " + request.getPassword());
+        final JWTResponse response = authServices.register(request, RoleEnum.ADMIN);
+        if (response.isSuccess()) {
             return ResponseEntity.ok(response);
         }
         return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
@@ -92,5 +76,18 @@ private AuthServices authServices;
             HttpServletResponse response
     ) throws IOException {
         authServices.refreshToken(request, response);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

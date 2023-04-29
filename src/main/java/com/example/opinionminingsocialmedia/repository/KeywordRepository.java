@@ -1,4 +1,4 @@
-package com.example.opinionminingsocialmedia.repositories;
+package com.example.opinionminingsocialmedia.repository;
 
 import com.example.opinionminingsocialmedia.models.Keyword;
 import com.example.opinionminingsocialmedia.models.User;
