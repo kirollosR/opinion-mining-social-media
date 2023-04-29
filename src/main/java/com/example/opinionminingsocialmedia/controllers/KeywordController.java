@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
+@RequestMapping("/api/v1")
 public class KeywordController {
     @Autowired
     KeywordService keywordService;
@@ -24,7 +25,6 @@ public class KeywordController {
     UserServices userServices;
 
     @GetMapping("/keywords")
-    @RequestMapping("/api/v1")
     public MappingJacksonValue getAllKeywords (){
 
         Filter filter = new Filter();

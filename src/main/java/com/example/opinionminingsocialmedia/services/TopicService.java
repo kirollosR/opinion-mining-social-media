@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TopicService {
@@ -19,8 +20,9 @@ public class TopicService {
     @Autowired
     private UserServices userServices;
 
-    public Response addTopic(Topic topic) {
-        Integer userId = topic.getUser().getId();
+    public Response addTopic(TopicDto topic) {
+        Integer userId = topic.getUserID();
+        Optional<User> user = userServices.getUserById(userId);
         if (userServices.isUserIdValid(userId)) {
             return Response.builder()
                     .message("Topic added successfully")

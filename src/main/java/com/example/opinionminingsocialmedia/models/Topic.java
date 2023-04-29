@@ -11,7 +11,7 @@ public class Topic {
     private Integer id;
     @Column(name = "name")
     private String name;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
