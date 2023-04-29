@@ -2,6 +2,7 @@ package com.example.opinionminingsocialmedia.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,15 +24,14 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
-    @Column(name = "content", nullable = false)
+    @NotEmpty
     private String content;
     @Lob
     @Transient
     @Column(name = "image", nullable = false)
     private MultipartFile image;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(cascade = CascadeType.ALL)
