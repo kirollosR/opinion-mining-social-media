@@ -2,12 +2,14 @@ package com.example.opinionminingsocialmedia.base;
 
 import com.example.opinionminingsocialmedia.base.enums.GenderEnum;
 import com.example.opinionminingsocialmedia.models.Gender;
+import com.example.opinionminingsocialmedia.models.KeywordGrade;
 import com.example.opinionminingsocialmedia.models.Role;
 import com.example.opinionminingsocialmedia.base.enums.RoleEnum;
 import com.example.opinionminingsocialmedia.models.User;
 import com.example.opinionminingsocialmedia.payload.requests.RegisterRequest;
 import com.example.opinionminingsocialmedia.payload.requests.UserRequest;
 import com.example.opinionminingsocialmedia.repository.GenderRepository;
+import com.example.opinionminingsocialmedia.repository.KeywordGradeRepository;
 import com.example.opinionminingsocialmedia.repository.RoleRepository;
 import com.example.opinionminingsocialmedia.services.AuthServices;
 import com.example.opinionminingsocialmedia.services.UserServices;
@@ -30,6 +32,9 @@ public class FirstTimeRunner implements CommandLineRunner {
 
     @Autowired
     private AuthServices authServices;
+    @Autowired
+    private KeywordGradeRepository keywordGradeRepository;
+
 
     @Autowired
     private FilesStorageService filesStorageService;
@@ -48,6 +53,13 @@ public class FirstTimeRunner implements CommandLineRunner {
         genderRepository.save(Gender.builder().name(GenderEnum.MALE.name()).build());
         genderRepository.save(Gender.builder().name(GenderEnum.FEMALE.name()).build());
         log.info("Gender saved successfully");
+
+        keywordGradeRepository.save(KeywordGrade.builder().id(2).grade("Very Negative").build());
+        keywordGradeRepository.save(KeywordGrade.builder().id(4).grade("Negative").build());
+        keywordGradeRepository.save(KeywordGrade.builder().id(6).grade("Neutral").build());
+        keywordGradeRepository.save(KeywordGrade.builder().id(8).grade("Positive").build());
+        keywordGradeRepository.save(KeywordGrade.builder().id(10).grade("Very Positive").build());
+        log.info("Keyword Grades saved successfully");
 
         authServices.saveAdmin(RegisterRequest
                 .builder()

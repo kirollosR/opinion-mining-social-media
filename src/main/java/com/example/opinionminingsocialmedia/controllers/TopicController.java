@@ -3,6 +3,7 @@ package com.example.opinionminingsocialmedia.controllers;
 import com.example.opinionminingsocialmedia.core.security.Response;
 import com.example.opinionminingsocialmedia.payload.requests.TopicRequest;
 import com.example.opinionminingsocialmedia.services.TopicService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class TopicController {
     private TopicService topicService;
 
     @PostMapping("/addTopic")
-    public ResponseEntity<Response> addTopic(@RequestBody TopicRequest topic){
+    public ResponseEntity<Response> addTopic(@Valid @RequestBody TopicRequest topic){
         Response response = topicService.addTopic(topic);
         if(response.isSuccess()){
             return new ResponseEntity(response, HttpStatus.OK);

@@ -2,6 +2,7 @@ package com.example.opinionminingsocialmedia.controllers;
 
 import com.example.opinionminingsocialmedia.core.security.Response;
 import com.example.opinionminingsocialmedia.models.Keyword;
+import com.example.opinionminingsocialmedia.payload.requests.KeywordRequest;
 import com.example.opinionminingsocialmedia.services.KeywordService;
 import jakarta.validation.Valid;
 
@@ -25,18 +26,13 @@ public class KeywordController {
     UserServices userServices;
 
     @GetMapping("/keywords")
-    public MappingJacksonValue getAllKeywords (){
-
-        Filter filter = new Filter();
-        List<Keyword> keywords = keywordService.getAllKeywords();
-        Set<String> hash_Set = new HashSet<String>();
-        hash_Set.add("password");
-        hash_Set.add("role");
-        hash_Set.add("authorities");
-        hash_Set.add("active");
-        MappingJacksonValue mappingJacksonValue = filter.filter(keywords, hash_Set, "userFilter");
-
-        return mappingJacksonValue;
+    public ResponseEntity<Response> getAllKeyword (){
+        Response response = keywordService.getAllKeywords();
+        if(response.isSuccess()){
+            return new ResponseEntity(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/keyword")
@@ -50,8 +46,38 @@ public class KeywordController {
     }
 
     @PostMapping("/addKeyword")
-    public ResponseEntity<Response> addKeyword(@Valid @RequestBody Keyword keyword){
-        final Response response = keywordService.addKeyword(keyword);
+    public ResponseEntity<Response> addKeyword(@Valid @RequestBody KeywordRequest keywordRequest){
+        final Response response = keywordService.addKeyword(keywordRequest);
+        if(response.isSuccess()){
+            return new ResponseEntity(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/deleteKeyword")
+    public ResponseEntity<Response> deleteKeyword(@RequestParam int id){
+        Response response = keywordService.deleteKeyword(id);
+        if(response.isSuccess()){
+            return new ResponseEntity(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/updateKeyword")
+    public ResponseEntity<Response> updateKeyword(@Valid @RequestBody KeywordRequest keywordRequest, @RequestParam int id){
+        Response response = keywordService.updateKeyword(keywordRequest, id);
+        if(response.isSuccess()){
+            return new ResponseEntity(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/keywordByName")
+    public ResponseEntity<Response> getKeywordByName (@RequestParam String name){
+        Response response = keywordService.getKeywordByName(name);
         if(response.isSuccess()){
             return new ResponseEntity(response, HttpStatus.OK);
         } else {
