@@ -1,6 +1,6 @@
 package com.example.opinionminingsocialmedia.errors;
 
-import com.example.opinionminingsocialmedia.models.ErrorResponse;
+import com.example.opinionminingsocialmedia.payload.responses.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
