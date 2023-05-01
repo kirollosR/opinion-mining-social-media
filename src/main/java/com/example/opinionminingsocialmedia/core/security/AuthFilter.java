@@ -1,6 +1,7 @@
 package com.example.opinionminingsocialmedia.core.security;
 
 import com.example.opinionminingsocialmedia.services.UserServices;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -27,19 +29,30 @@ public class AuthFilter extends OncePerRequestFilter {
         final String header = request.getHeader(TOKEN_HEADER);
         final SecurityContext context = SecurityContextHolder.getContext();
 
-        if(header != null && context.getAuthentication() == null) { 
+        if (header != null && context.getAuthentication() == null) {
             String token = header.substring("Bearer ".length());
             String userName = tokenUtil.getUserNameFromToken(token);
-            if(userName != null) {
+            if (userName != null) {
+                try {
+                    UserDetails userDetails = userServices.loadUserByUsername(userName);
+                } catch (UsernameNotFoundException e) {
+                    new ObjectMapper().writeValue(response.getOutputStream(), Response.builder()
+                            .message("The User not found or token is invalid")
+                            .build());
+                    return;
+                }
                 UserDetails userDetails = userServices.loadUserByUsername(userName);
-                if(tokenUtil.isTokenValid(token, userDetails)) {
+                if (tokenUtil.isTokenValid(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    WebAuthenticationDetailsSource source =  new WebAuthenticationDetailsSource();
+                    WebAuthenticationDetailsSource source = new WebAuthenticationDetailsSource();
                     authentication.setDetails(source.buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         }
+//        new ObjectMapper().writeValue(response.getOutputStream(), Response.builder()
+//                .message("The User not found or token is invalid")
+//                .build());
         filterChain.doFilter(request, response);
     }
 }
