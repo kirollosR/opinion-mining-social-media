@@ -14,8 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentRequest {
+    @NotNull
+    private Integer postId;
     @NotEmpty
-    @Min(3)
-    @Max(250)
+//    @Min(3)
+//    @Max(250)
     private String content;
 }

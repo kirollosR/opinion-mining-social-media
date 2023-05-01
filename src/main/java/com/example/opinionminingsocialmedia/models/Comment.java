@@ -27,9 +27,9 @@ public class  Comment {
     @NotEmpty
     private String content;
     @Column(name = "score")
-    private Integer score;
+    private Float score;
     @CreatedDate
-    @Column(name = "created_date", nullable = false, updatable = false)
+    @Column(name = "created_date", updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date date;
 

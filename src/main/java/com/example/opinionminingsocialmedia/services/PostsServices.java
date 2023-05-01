@@ -116,6 +116,8 @@ public class PostsServices {
                 .image(fileInfo.getUrl())
                 .topic(topic.get())
                 .user(user.get())
+                .postLikes(0)
+                .postScore(Float.valueOf(0))
                 .build());
         return ResponseEntity.ok(Response.builder()
                 .success(true)

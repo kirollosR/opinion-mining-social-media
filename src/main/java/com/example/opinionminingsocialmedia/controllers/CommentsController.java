@@ -24,23 +24,23 @@ public class CommentsController {
     @Autowired
     private CommentsServices commentsServices;
 
-    @GetMapping("/post/{postId}/comments")
+    @GetMapping("/comments/{postId}")
     public ResponseEntity<Response> getAllCommentsByPostId(@PathParam("postId") Integer postId,
                                                            @RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "10") int pageSize) {
         return commentsServices.getAllPostComments(postId, page, pageSize);
     }
-
+ 
 //    @GetMapping("/posts/{id}")
 //    public Post getPostById(@PathVariable int id) {
 //        return postsServices.getPostById(id);
 //    }
 
-    @PostMapping("/post/{postId}/comments")
-    public ResponseEntity<Response> addComment(@PathParam("postId") Integer postId,
-                                               @Valid @RequestBody CommentRequest commentRequest,
-                                               HttpServletRequest httpServletRequest) {
-        commentsServices.
+    @PostMapping("/comments")
+    public ResponseEntity<Response> addComment(@Valid @RequestBody CommentRequest commentRequest,
+                                               HttpServletRequest httpServletRequest,
+                                               HttpServletResponse httpServletResponse) {
+        return commentsServices.addComment(commentRequest, httpServletRequest);
     }
 
 //    @GetMapping("/postsByTopic")

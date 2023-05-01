@@ -5,6 +5,7 @@ import com.example.opinionminingsocialmedia.core.security.TokenUtil;
 import com.example.opinionminingsocialmedia.models.*;
 import com.example.opinionminingsocialmedia.payload.requests.CommentRequest;
 import com.example.opinionminingsocialmedia.repository.CommentsRepository;
+import com.example.opinionminingsocialmedia.repository.KeywordRepository;
 import com.example.opinionminingsocialmedia.repository.PostsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class CommentsServices {
     private PostsRepository postsServices;
 
     @Autowired
-    private KeywordService keywordService;
+    private KeywordRepository keywordRepository;
 
     public ResponseEntity<Response> getAllPostComments(int postId, int page, int pageSize) {
         return ResponseEntity.ok(
@@ -45,11 +46,11 @@ public class CommentsServices {
         );
     }
 
-    public ResponseEntity<Response> addComment(int postId, CommentRequest commentRequest, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Response> addComment(CommentRequest commentRequest, HttpServletRequest httpServletRequest) {
         final String authHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         String token = authHeader.substring("Bearer ".length());
         String username = tokenUtil.getUserNameFromToken(token);
-        Optional<Post> post = postsServices.findById(postId);
+        Optional<Post> post = postsServices.findById(commentRequest.getPostId());
         if(post.isEmpty()) {
             return ResponseEntity.badRequest().body(Response
                     .builder()
@@ -73,18 +74,36 @@ public class CommentsServices {
                     .message("Sorry the topic id you entered is not found")
                     .build());
         }
-        Comment comment = Comment.builder()
+        Float commentScore = calculateCommentScore(commentRequest.getContent()).floatValue();
+        Comment comment = commentsRepository.save(Comment.builder()
                 .content(commentRequest.getContent())
                 .user(user.get())
                 .topic(topic.get())
                 .post(post.get())
-                .score(0)
-                .build();
+                .score(commentScore)
+                .build());
+        post.get().setPostScore(commentScore);
+        postsServices.save(post.get());
+        return ResponseEntity.ok(Response.builder()
+                .success(true)
+                .message("The Comment saved successfully")
+                .data(comment)
+                .build());
     }
 
-    private Integer calculateCommentScore(CommentRequest request) {
+    private Integer calculateCommentScore(String content) {
         var sum = 0;
         var count = 0;
-        List<Keyword> keywordList =
+        List<Keyword> keywordList = keywordRepository.findAll();
+        for (Keyword keyword : keywordList) {
+            if(content.contains(keyword.getName())) {
+                sum += keyword.getScore().getId();
+                count++;
+            }
+        }
+        if(sum == 0) {
+            return 0;
+        }
+        return sum / count;
     }
 }
