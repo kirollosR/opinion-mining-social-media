@@ -13,6 +13,7 @@ import com.example.opinionminingsocialmedia.repository.KeywordGradeRepository;
 import com.example.opinionminingsocialmedia.repository.RoleRepository;
 import com.example.opinionminingsocialmedia.services.AuthServices;
 import com.example.opinionminingsocialmedia.services.UserServices;
+import com.example.opinionminingsocialmedia.services.file_storage_service.FilesStorageService;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Component;
 public class FirstTimeRunner implements CommandLineRunner {
 
     private final Log log = LogFactory.getLog(FirstTimeRunner.class);
-
 
     @Autowired
     private RoleRepository roleRepository;
@@ -36,10 +36,15 @@ public class FirstTimeRunner implements CommandLineRunner {
     private KeywordGradeRepository keywordGradeRepository;
 
 
+    @Autowired
+    private FilesStorageService filesStorageService;
+
     @Override
     public void run(String... args) throws Exception {
 
         log.info("when project run");
+        filesStorageService.deleteAll();
+        filesStorageService.init();
 
         roleRepository.save(Role.builder().name(RoleEnum.ADMIN.name()).build());
         roleRepository.save(Role.builder().name(RoleEnum.USER.name()).build());

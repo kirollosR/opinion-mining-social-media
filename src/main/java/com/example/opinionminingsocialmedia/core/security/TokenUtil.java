@@ -56,6 +56,8 @@ public class TokenUtil {
     public String getUserNameFromToken(String token) {
 
         Claims claims = getClaims(token);
+        if(claims == null)
+            return null;
 
         return claims.getSubject();
 

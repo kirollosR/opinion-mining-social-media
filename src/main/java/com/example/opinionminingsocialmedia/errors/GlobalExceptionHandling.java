@@ -1,10 +1,11 @@
 package com.example.opinionminingsocialmedia.errors;
 
-import com.example.opinionminingsocialmedia.models.ErrorResponse;
+import com.example.opinionminingsocialmedia.payload.responses.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -33,6 +34,13 @@ public class GlobalExceptionHandling extends ResponseEntityExceptionHandler {
         return new ResponseEntity(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public final ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Record Not Found" , HttpStatus.NOT_FOUND.toString() , details);
+        return ResponseEntity.status(401).body(error);
+    }
 //    @ExceptionHandler(MethodArgumentNotValidException.class)
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -43,4 +51,5 @@ public class GlobalExceptionHandling extends ResponseEntityExceptionHandler {
         ErrorResponse error = new ErrorResponse("Validation Failed" ,  HttpStatus.BAD_REQUEST.toString(), details);
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
+
 }
