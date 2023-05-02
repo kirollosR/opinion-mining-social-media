@@ -25,7 +25,7 @@ public class CommentsController {
     private CommentsServices commentsServices;
 
     @GetMapping("/comments/{postId}")
-    public ResponseEntity<Response> getAllCommentsByPostId(@PathParam("postId") Integer postId,
+    public ResponseEntity<Response> getAllCommentsByPostId(@PathVariable("postId") Integer postId,
                                                            @RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "10") int pageSize) {
         return commentsServices.getAllPostComments(postId, page, pageSize);
