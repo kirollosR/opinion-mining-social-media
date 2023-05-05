@@ -1,7 +1,9 @@
 package com.example.opinionminingsocialmedia.services;
 
+import com.example.opinionminingsocialmedia.core.security.TokenUtil;
 import com.example.opinionminingsocialmedia.models.User;
 import com.example.opinionminingsocialmedia.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +20,9 @@ import java.util.Optional;
 public class UserServices implements UserDetailsService {
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private TokenUtil tokenUtil;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -64,5 +69,18 @@ public class UserServices implements UserDetailsService {
     public Optional<User> findById(Integer id) {
 
         return repository.findById(id);
+    }
+
+    public boolean isAdmin(HttpServletRequest request) {
+        String TOKEN_HEADER = "Authorization";
+        final String header = request.getHeader(TOKEN_HEADER);
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring("Bearer ".length());
+            String username = tokenUtil.getUserNameFromToken(token);
+            Integer roleId = repository.findRoleIdById(username);
+            return roleId == 1;
+        } else {
+            return false;
+        }
     }
 }

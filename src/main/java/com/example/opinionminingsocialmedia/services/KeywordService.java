@@ -6,11 +6,13 @@ import com.example.opinionminingsocialmedia.models.Keyword;
 import com.example.opinionminingsocialmedia.models.KeywordGrade;
 import com.example.opinionminingsocialmedia.models.User;
 import com.example.opinionminingsocialmedia.payload.requests.KeywordRequest;
+import com.example.opinionminingsocialmedia.payload.responses.JWTResponse;
 import com.example.opinionminingsocialmedia.payload.responses.KeywordResponse;
 import com.example.opinionminingsocialmedia.payload.responses.UserResponse;
-import com.example.opinionminingsocialmedia.repository.KeywordGradeService;
 import com.example.opinionminingsocialmedia.repository.KeywordRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +28,14 @@ public class KeywordService {
     @Autowired
     KeywordGradeService keywordGradeService;
 
-    public Response getAllKeywords (){
+    public Response getAllKeywords (HttpServletRequest request){
+        if(!userServices.isAdmin(request)){
+            return Response
+                    .builder()
+                    .success(false)
+                    .message("Sorry you are not authorized")
+                    .build();
+        }
         List<KeywordResponse> keywordResponses = new ArrayList<>();
         List<Keyword> keywords = keywordRepository.findAll();
         for(Keyword keyword : keywords){
@@ -61,8 +70,15 @@ public class KeywordService {
         }
     }
 
-    public Response getKeywordById (int id) {
+    public Response getKeywordById (int id, HttpServletRequest request) {
         try {
+            if(!userServices.isAdmin(request)){
+                return Response
+                        .builder()
+                        .success(false)
+                        .message("Sorry you are not authorized")
+                        .build();
+            }
             Keyword keyword = keywordRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Keyword not found"));
             return Response.builder()
                     .success(true)
@@ -95,7 +111,14 @@ public class KeywordService {
         }
     }
 
-    public Response addKeyword(KeywordRequest keywordRequest){
+    public Response addKeyword(KeywordRequest keywordRequest, HttpServletRequest request){
+        if(!userServices.isAdmin(request)){
+            return Response
+                    .builder()
+                    .success(false)
+                    .message("Sorry you are not authorized")
+                    .build();
+        }
         Integer userId = keywordRequest.getUserID();
         var user = userServices.findById(userId);
         Integer score = keywordRequest.getScore();
@@ -120,8 +143,15 @@ public class KeywordService {
         }
     }
 
-    public Response deleteKeyword (int id){
+    public Response deleteKeyword (int id, HttpServletRequest request){
         try {
+            if(!userServices.isAdmin(request)){
+                return Response
+                        .builder()
+                        .success(false)
+                        .message("Sorry you are not authorized")
+                        .build();
+            }
             keywordRepository.deleteById(id);
             return Response.builder()
                     .success(true)
@@ -137,8 +167,15 @@ public class KeywordService {
         }
     }
 
-    public Response updateKeyword(KeywordRequest keywordRequest, int id){
+    public Response updateKeyword(KeywordRequest keywordRequest, int id, HttpServletRequest request){
         try {
+            if(!userServices.isAdmin(request)){
+                return Response
+                        .builder()
+                        .success(false)
+                        .message("Sorry you are not authorized")
+                        .build();
+            }
             Optional<Keyword> keyword = keywordRepository.findById(id);
             KeywordGrade keywordGrade = keywordGradeService.findById(keywordRequest.getScore()).get();
             if(keyword.isPresent()){

@@ -4,6 +4,7 @@ import com.example.opinionminingsocialmedia.core.security.Response;
 import com.example.opinionminingsocialmedia.models.Keyword;
 import com.example.opinionminingsocialmedia.payload.requests.KeywordRequest;
 import com.example.opinionminingsocialmedia.services.KeywordService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import com.example.opinionminingsocialmedia.services.UserServices;
@@ -26,8 +27,8 @@ public class KeywordController {
     UserServices userServices;
 
     @GetMapping("/keywords")
-    public ResponseEntity<Response> getAllKeyword (){
-        Response response = keywordService.getAllKeywords();
+    public ResponseEntity<Response> getAllKeyword (HttpServletRequest request){
+        Response response = keywordService.getAllKeywords(request);
         if(response.isSuccess()){
             return new ResponseEntity(response, HttpStatus.OK);
         } else {
@@ -36,8 +37,8 @@ public class KeywordController {
     }
 
     @GetMapping("/keyword")
-    public ResponseEntity<Response> getKeywordById (@RequestParam int id){
-        Response response = keywordService.getKeywordById(id);
+    public ResponseEntity<Response> getKeywordById (@RequestParam int id, HttpServletRequest request){
+        Response response = keywordService.getKeywordById(id, request);
         if(response.isSuccess()){
             return new ResponseEntity(response, HttpStatus.OK);
         } else {
@@ -46,8 +47,8 @@ public class KeywordController {
     }
 
     @PostMapping("/addKeyword")
-    public ResponseEntity<Response> addKeyword(@Valid @RequestBody KeywordRequest keywordRequest){
-        final Response response = keywordService.addKeyword(keywordRequest);
+    public ResponseEntity<Response> addKeyword(@Valid @RequestBody KeywordRequest keywordRequest, HttpServletRequest request){
+        final Response response = keywordService.addKeyword(keywordRequest, request);
         if(response.isSuccess()){
             return new ResponseEntity(response, HttpStatus.OK);
         } else {
@@ -56,8 +57,8 @@ public class KeywordController {
     }
 
     @DeleteMapping("/deleteKeyword")
-    public ResponseEntity<Response> deleteKeyword(@RequestParam int id){
-        Response response = keywordService.deleteKeyword(id);
+    public ResponseEntity<Response> deleteKeyword(@RequestParam int id, HttpServletRequest request){
+        Response response = keywordService.deleteKeyword(id, request);
         if(response.isSuccess()){
             return new ResponseEntity(response, HttpStatus.OK);
         } else {
@@ -66,8 +67,8 @@ public class KeywordController {
     }
 
     @PutMapping("/updateKeyword")
-    public ResponseEntity<Response> updateKeyword(@Valid @RequestBody KeywordRequest keywordRequest, @RequestParam int id){
-        Response response = keywordService.updateKeyword(keywordRequest, id);
+    public ResponseEntity<Response> updateKeyword(@Valid @RequestBody KeywordRequest keywordRequest, @RequestParam int id, HttpServletRequest request){
+        Response response = keywordService.updateKeyword(keywordRequest, id, request);
         if(response.isSuccess()){
             return new ResponseEntity(response, HttpStatus.OK);
         } else {

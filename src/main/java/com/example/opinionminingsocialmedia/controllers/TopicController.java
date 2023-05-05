@@ -3,6 +3,7 @@ package com.example.opinionminingsocialmedia.controllers;
 import com.example.opinionminingsocialmedia.core.security.Response;
 import com.example.opinionminingsocialmedia.payload.requests.TopicRequest;
 import com.example.opinionminingsocialmedia.services.TopicService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,8 @@ public class TopicController {
     private TopicService topicService;
 
     @PostMapping("/addTopic")
-    public ResponseEntity<Response> addTopic(@Valid @RequestBody TopicRequest topic){
-        Response response = topicService.addTopic(topic);
+    public ResponseEntity<Response> addTopic(@Valid @RequestBody TopicRequest topic, HttpServletRequest request){
+        Response response = topicService.addTopic(topic, request);
         if(response.isSuccess()){
             return new ResponseEntity(response, HttpStatus.OK);
         } else {
@@ -37,8 +38,8 @@ public class TopicController {
     }
 
     @DeleteMapping("/deleteTopic")
-    public ResponseEntity<Response> deleteTopic(@RequestParam Integer id){
-        Response response = topicService.deleteTopic(id);
+    public ResponseEntity<Response> deleteTopic(@RequestParam Integer id, HttpServletRequest request){
+        Response response = topicService.deleteTopic(id, request);
         if(response.isSuccess()){
             return new ResponseEntity(response, HttpStatus.OK);
         } else {
