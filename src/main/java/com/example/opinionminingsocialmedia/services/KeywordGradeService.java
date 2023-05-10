@@ -1,7 +1,8 @@
-package com.example.opinionminingsocialmedia.repository;
+package com.example.opinionminingsocialmedia.services;
 
 import com.example.opinionminingsocialmedia.models.KeywordGrade;
 import com.example.opinionminingsocialmedia.models.User;
+import com.example.opinionminingsocialmedia.repository.KeywordGradeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

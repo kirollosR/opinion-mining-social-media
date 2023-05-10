@@ -17,12 +17,12 @@ import com.example.opinionminingsocialmedia.services.file_storage_service.FilesS
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FirstTimeRunner implements CommandLineRunner {
-
     private final Log log = LogFactory.getLog(FirstTimeRunner.class);
 
     @Autowired
@@ -39,38 +39,45 @@ public class FirstTimeRunner implements CommandLineRunner {
     @Autowired
     private FilesStorageService filesStorageService;
 
+    @Value("${myapp.isFirstRun}")
+    private boolean isFirstRun;
+
     @Override
     public void run(String... args) throws Exception {
+        if (isFirstRun) {
+            log.info("when project run");
+            filesStorageService.deleteAll();
+            filesStorageService.init();
 
-        log.info("when project run");
-        filesStorageService.deleteAll();
-        filesStorageService.init();
+            roleRepository.save(Role.builder().name(RoleEnum.ADMIN.name()).build());
+            roleRepository.save(Role.builder().name(RoleEnum.USER.name()).build());
+            log.info("Roles saved successfully");
 
-        roleRepository.save(Role.builder().name(RoleEnum.ADMIN.name()).build());
-        roleRepository.save(Role.builder().name(RoleEnum.USER.name()).build());
-        log.info("Roles saved successfully");
+            genderRepository.save(Gender.builder().name(GenderEnum.MALE.name()).build());
+            genderRepository.save(Gender.builder().name(GenderEnum.FEMALE.name()).build());
+            log.info("Gender saved successfully");
 
-        genderRepository.save(Gender.builder().name(GenderEnum.MALE.name()).build());
-        genderRepository.save(Gender.builder().name(GenderEnum.FEMALE.name()).build());
-        log.info("Gender saved successfully");
+            keywordGradeRepository.save(KeywordGrade.builder().id(2).grade("Very Negative").build());
+            keywordGradeRepository.save(KeywordGrade.builder().id(4).grade("Negative").build());
+            keywordGradeRepository.save(KeywordGrade.builder().id(6).grade("Neutral").build());
+            keywordGradeRepository.save(KeywordGrade.builder().id(8).grade("Positive").build());
+            keywordGradeRepository.save(KeywordGrade.builder().id(10).grade("Very Positive").build());
+            log.info("Keyword Grades saved successfully");
 
-        keywordGradeRepository.save(KeywordGrade.builder().id(2).grade("Very Negative").build());
-        keywordGradeRepository.save(KeywordGrade.builder().id(4).grade("Negative").build());
-        keywordGradeRepository.save(KeywordGrade.builder().id(6).grade("Neutral").build());
-        keywordGradeRepository.save(KeywordGrade.builder().id(8).grade("Positive").build());
-        keywordGradeRepository.save(KeywordGrade.builder().id(10).grade("Very Positive").build());
-        log.info("Keyword Grades saved successfully");
-
-        authServices.saveAdmin(RegisterRequest
-                .builder()
-                .firstName("Ziad")
-                .lastName("Khaled")
-                .gender(1)
-                .username("admin")
-                .password("admin")
-                .email("ziadkhaled@gmail.com")
-                .build());
-        log.info("Admin saved successfully");
+            authServices.saveAdmin(RegisterRequest
+                    .builder()
+                    .firstName("Ziad")
+                    .lastName("Khaled")
+                    .gender(1)
+                    .username("admin")
+                    .password("admin")
+                    .email("ziadkhaled@gmail.com")
+                    .build());
+            log.info("Admin saved successfully");
+            isFirstRun = false;
+        } else {
+            log.info("All is saved it's not first run");
+        }
     }
 
 }

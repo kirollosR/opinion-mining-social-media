@@ -7,6 +7,7 @@ import com.example.opinionminingsocialmedia.models.User;
 import com.example.opinionminingsocialmedia.payload.responses.TopicResponse;
 import com.example.opinionminingsocialmedia.payload.responses.UserResponse;
 import com.example.opinionminingsocialmedia.repository.TopicRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,14 @@ public class TopicService {
     @Autowired
     private UserServices userServices;
 
-    public Response addTopic(TopicRequest topicRequest) {
+    public Response addTopic(TopicRequest topicRequest, HttpServletRequest request) {
+        if(!userServices.isAdmin(request)){
+            return Response
+                    .builder()
+                    .success(false)
+                    .message("Sorry you are not authorized")
+                    .build();
+        }
         Integer userId = topicRequest.getUserID();
         var user = userServices.findById(userId);
         if (user.isPresent()) {
@@ -77,8 +85,15 @@ public class TopicService {
         }
     }
 
-    public Response deleteTopic(Integer id) {
+    public Response deleteTopic(Integer id, HttpServletRequest request) {
         try {
+            if(!userServices.isAdmin(request)){
+                return Response
+                        .builder()
+                        .success(false)
+                        .message("Sorry you are not authorized")
+                        .build();
+            }
             topicRepository.deleteById(id);
             return Response.builder()
                     .success(true)
