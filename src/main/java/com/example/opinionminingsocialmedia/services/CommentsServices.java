@@ -82,7 +82,12 @@ public class CommentsServices {
                 .post(post.get())
                 .score(commentScore)
                 .build());
-        post.get().setPostScore(commentScore);
+        if(post.get().getPostScore() == 0){
+            post.get().setPostScore(commentScore);
+        } else {
+            post.get().setPostScore((commentScore + post.get().getPostScore()) / 2);
+        }
+
         postsServices.save(post.get());
         return ResponseEntity.ok(Response.builder()
                 .success(true)
@@ -96,7 +101,7 @@ public class CommentsServices {
         var count = 0;
         List<Keyword> keywordList = keywordRepository.findAll();
         for (Keyword keyword : keywordList) {
-            if(content.contains(keyword.getName())) {
+            if(content.toLowerCase().contains(keyword.getName().toLowerCase())) {
                 sum += keyword.getScore().getId();
                 count++;
             }

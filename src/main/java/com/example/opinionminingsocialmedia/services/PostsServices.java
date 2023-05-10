@@ -54,6 +54,7 @@ public class PostsServices {
         return ResponseEntity.ok(postsRepository.findByTopicName(topic,pageable));
     }
 
+
     public ResponseEntity<Response> getPostById(int id) {
         Optional<Post> post = postsRepository.findById(id);
         if(post.isEmpty()) {
@@ -85,7 +86,7 @@ public class PostsServices {
             return ResponseEntity.status(401).body(Response
                     .builder()
                     .success(false)
-                    .message("Sorry you not authorized")
+                    .message("Sorry you are not authorized")
                     .build());
         }
         if(topic.isEmpty()) {
