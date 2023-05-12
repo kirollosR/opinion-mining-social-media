@@ -18,8 +18,7 @@ public class KeywordRequest {
     @Min(value = 2, message = "Score must be greater than 2")
     @Max(value = 10, message = "Score must be less than 10")
     private Integer score;
-    @NotNull(message = "Please enter a user id")
-    private Integer userID;
+
 
     @AssertTrue(message = "Score must be an even number")
     private boolean isEven() {
