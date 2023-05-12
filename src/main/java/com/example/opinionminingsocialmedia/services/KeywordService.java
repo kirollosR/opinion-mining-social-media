@@ -1,6 +1,7 @@
 package com.example.opinionminingsocialmedia.services;
 
 import com.example.opinionminingsocialmedia.core.security.Response;
+import com.example.opinionminingsocialmedia.core.security.TokenUtil;
 import com.example.opinionminingsocialmedia.errors.RecordNotFoundException;
 import com.example.opinionminingsocialmedia.models.Keyword;
 import com.example.opinionminingsocialmedia.models.KeywordGrade;
@@ -12,6 +13,7 @@ import com.example.opinionminingsocialmedia.payload.responses.UserResponse;
 import com.example.opinionminingsocialmedia.repository.KeywordRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,8 @@ public class KeywordService {
     UserServices userServices;
     @Autowired
     KeywordGradeService keywordGradeService;
+    @Autowired
+    private TokenUtil tokenUtil;
 
     public Response getAllKeywords (HttpServletRequest request){
         if(!userServices.isAdmin(request)){
@@ -119,8 +123,18 @@ public class KeywordService {
                     .message("Sorry you are not authorized")
                     .build();
         }
-        Integer userId = keywordRequest.getUserID();
-        var user = userServices.findById(userId);
+        // Integer userId = keywordRequest.getUserID();
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = authHeader.substring("Bearer ".length());
+        String username = tokenUtil.getUserNameFromToken(token);
+        Optional<User> user =  userServices.findByUserName(username);
+        if(user.isEmpty()) {
+            return Response
+                    .builder()
+                    .success(false)
+                    .message("Sorry you are not authorized")
+                    .build();
+        }
         Integer score = keywordRequest.getScore();
         var keywordGrade = keywordGradeService.findById(keywordRequest.getScore());
         if(user.isPresent()){
